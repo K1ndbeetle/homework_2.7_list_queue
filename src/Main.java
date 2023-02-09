@@ -1,18 +1,25 @@
 import Driver.DriverB;
 import Driver.DriverC;
 import Driver.DriverD;
-import Transport.Bus;
-import Transport.Car;
-import Transport.Transport;
-import Transport.Trucks;
+import Transport.*;
 import Transport.enums.BodyTypes;
 import Transport.enums.CapacityType;
 import Transport.enums.LoadType;
 import Transport.exception.TransportTypeException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Main {
     public static void main(String[] args) throws TransportTypeException {
-        DriverB driverB = new DriverB("Иван ИВанов Иванович", true, 15);
+
+        Mechanic mechanic1 = new Mechanic("Иван", "Бик Авто");
+        Mechanic mechanic2 = new Mechanic("Алексей", "Fit Service");
+        Mechanic mechanic3 = new Mechanic("Илья", "Twin Top");
+
+        DriverB driverB = new DriverB("Иван Иванов Иванович", true, 15);
+        DriverD driverD = new DriverD("Фёдор Фёдорович Колесников", true, 10);
+        DriverC driverC = new DriverC("Антон Антонович Антонов", true, 17);
 
         Car carAudi = new Car(
                 "Audi",
@@ -28,7 +35,7 @@ public class Main {
                 driverB,
                 BodyTypes.COUPE);
 
-        Car carKia = new Car(
+/*        Car carKia = new Car(
                 "Kia",
                 "Sportage 4-го поколения",
                 2.4,
@@ -41,15 +48,14 @@ public class Main {
                 1.6,
                 driverB,
                 null);
-
+*/
+        /*
         printInfo(carAudi);
         printInfo(carBmw);
         printInfo(carKia);
         printInfo(carHyundai);
         System.out.println();
-
-        DriverD driverD = new DriverD("Фёдор Фёдорович Колесников", true, 10);
-
+*/
         Bus busDaewoo = new Bus(
                 "Daewoo",
                 "BS 106",
@@ -64,7 +70,7 @@ public class Main {
                 driverD,
                 CapacityType.BIG);
 
-        Bus busSetra = new Bus(
+/*        Bus busSetra = new Bus(
                 "Setra",
                 "S215 HD",
                 8,
@@ -77,15 +83,14 @@ public class Main {
                 7.7,
                 driverD,
                 CapacityType.LITTLE);
-
+*/
+        /*
         printInfo(busDaewoo);
         printInfo(busHiger);
         printInfo(busSetra);
         printInfo(busVolvo);
         System.out.println();
-
-        DriverC driverC = new DriverC("Антон Антонович Антонов", true, 17);
-
+*/
         Trucks trucksMan = new Trucks(
                 "Man",
                 "TGX",
@@ -99,7 +104,7 @@ public class Main {
                 16,
                 driverC,
                 null);
-
+/*
         Trucks trucksTatra = new Trucks(
                 "Tatra",
                 "T815",
@@ -113,7 +118,8 @@ public class Main {
                 12.8,
                 driverC,
                 LoadType.N3);
-
+*/
+/*
         printInfo(trucksMan);
         printInfo(trucksScania);
         printInfo(trucksTatra);
@@ -150,17 +156,94 @@ public class Main {
         trucksRenault.passDiagnostics();
 
         try {busDaewoo.passDiagnostics();
-             busHiger.passDiagnostics();
-             busSetra.passDiagnostics();
-             busVolvo.passDiagnostics();
+            busHiger.passDiagnostics();
+            busSetra.passDiagnostics();
+            busVolvo.passDiagnostics();
         }
         catch (TransportTypeException e) {
             System.err.println("Автобусы диагностику проходить не должны.");
         }
+*/
 
+        List<Mechanic> mechanics = new ArrayList<>();
+        mechanics.add(mechanic1);
+        mechanics.add(mechanic2);
+        mechanics.add(mechanic3);
 
+        System.out.println(mechanics);
+
+        carAudi.setMechanics(mechanic1);
+        carBmw.setMechanics(mechanic2);
+        carBmw.setMechanics(mechanic3);
+
+        trucksMan.setMechanics(mechanic2);
+        trucksMan.setMechanics(mechanic1);
+        trucksScania.setMechanics(mechanic3);
+
+        busDaewoo.setMechanics(mechanic3);
+        busHiger.setMechanics(mechanic3);
 
         System.out.println();
+
+        driverAndMechanics(carAudi);
+        driverAndMechanics(carBmw);
+
+        driverAndMechanics(trucksMan);
+        driverAndMechanics(trucksScania);
+
+        driverAndMechanics(busDaewoo);
+        driverAndMechanics(busHiger);
+
+        System.out.println();
+
+        try {
+            mechanic1.performMaintenance(carAudi);
+            mechanic2.performMaintenance(trucksMan);
+            mechanic2.performMaintenance(carBmw);
+            mechanic3.performMaintenance(busDaewoo);
+        } catch (TransportTypeException e) {
+            System.err.println("Автобусы не нуждаются в техобслуживании перед заездом");
+        }
+
+        System.out.println();
+
+        mechanic2.fixTheCar(trucksMan);
+        mechanic1.fixTheCar(carBmw);
+
+        System.out.println();
+
+        List<Transport> transport = new ArrayList<>();
+        transport.add(carAudi);
+        transport.add(carBmw);
+        transport.add(trucksMan);
+        transport.add(trucksScania);
+        transport.add(busDaewoo);
+        transport.add(busHiger);
+
+        System.out.println(transport);
+
+        ServiceStation serviceCar = new ServiceStation();
+        ServiceStation serviceTruck = new ServiceStation();
+
+        serviceCar.addCarQueue(carAudi);
+        serviceCar.addCarQueue(carBmw);
+
+        serviceTruck.addCarQueue(trucksMan);
+        serviceTruck.addCarQueue(trucksScania);
+
+        serviceCar.performMaintenance();
+        serviceTruck.performMaintenance();
+
+        System.out.println();
+
+    }
+
+    public static void driverAndMechanics(Transport transport) {
+        System.out.println("Водитель " +
+                transport.getBrand() +
+                " " + transport.getModel() +
+                " является " + transport.getDriver().getFIO() +
+                ", транспорт обслуживается механиком(механиками): " + transport.getMechanics());
     }
 
     public static void printInfo(Transport<?> transport){

@@ -4,11 +4,15 @@ import Driver.Driver;
 import Interfaces.Competing;
 import Transport.exception.TransportTypeException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class Transport <T extends Driver> implements Competing {
     private final String brand;
     private final String model;
     private double engineVolume;
     private T driver;
+    private List<Mechanic> mechanics;
 
     public Transport(String brand,
                      String model,
@@ -22,6 +26,7 @@ public abstract class Transport <T extends Driver> implements Competing {
         } else this.model = model;
         setEngineVolume(engineVolume);
         setDriver(driver);
+        this.mechanics = new ArrayList<>();
     }
 
     public T getDriver() {
@@ -38,6 +43,14 @@ public abstract class Transport <T extends Driver> implements Competing {
 
     public String getModel() {
         return model;
+    }
+
+    public List<Mechanic> getMechanics() {
+        return mechanics;
+    }
+
+    public void setMechanics(Mechanic mechanics) {
+        this.mechanics.add(mechanics);
     }
 
     public double getEngineVolume() {
